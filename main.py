@@ -4,6 +4,7 @@ from glob import glob
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 def generate_monthly_csv():
     dfs = []
     files = glob('./dataset/monthly/*.csv')
@@ -31,4 +32,3 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
     print(dfMonthly)
-
