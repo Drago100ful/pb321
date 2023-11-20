@@ -1,5 +1,7 @@
 import pandas as pd
-if __name__ == '__main__':
+
+
+def generate_monthly_csv():
     dfs = []
 
     df = pd.read_csv('dataset/monthly/topviews-2023_10.csv')
@@ -65,4 +67,10 @@ if __name__ == '__main__':
     dfBig = pd.concat(dfs)
     dfBig = dfBig.sort_values("Views", ascending=False)
     dfBig.to_csv('./dataset/monthly/monthly_merged.csv')
-    print(dfBig)
+
+
+if __name__ == '__main__':
+    # generate_monthly_csv()
+
+    dfMonthly = pd.read_csv("dataset/monthly/monthly_merged.csv")
+    print(dfMonthly)
