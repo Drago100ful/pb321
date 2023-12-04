@@ -21,7 +21,7 @@ def generate_monthly_csv():
 if __name__ == '__main__':
     # generate_monthly_csv()
     plt.rcParams[("figure.figsize")] = [10, 5]
-    query = "Bible"
+    query = "Taylor Swift"
 
     dfMonthly = pd.read_csv("dataset/out/topviews_merged.csv").set_index("Date").sort_values("Date", ascending=True)
     df = dfMonthly[dfMonthly.Page.isin([query])]
