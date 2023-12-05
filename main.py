@@ -35,12 +35,10 @@ if __name__ == '__main__':
     df["Views"].plot(ax=ax, title=query, x="Date", label="Views", legend=True)
     plt.ylabel("Views")
 
-    mask = df["Edits"] == "?"
-    df[~mask]["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits", legend=True)
+    df["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits", legend=True)
     plt.ylabel("Edits")
 
-    mask2 = df["Editors"] == "?"
-    df[~mask2]["Editors"].plot(ax=ax, x="Date", secondary_y=True, label="Editors", legend=True)
+    df["Editors"].plot(ax=ax, x="Date", secondary_y=True, label="Editors", legend=True)
 
     plt.gcf().autofmt_xdate(rotation=45)
     plt.show()
