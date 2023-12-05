@@ -36,7 +36,7 @@ if __name__ == '__main__':
     plt.ylabel("Views")
 
     df["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits", legend=True)
-    plt.ylabel("Edits")
+    plt.ylabel("Count")
 
     df["Editors"].plot(ax=ax, x="Date", secondary_y=True, label="Editors", legend=True)
 
