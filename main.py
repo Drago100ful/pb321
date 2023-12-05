@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # generate_monthly_csv()
 
     plt.rcParams[("figure.figsize")] = [10, 5]
-    query = "Oppenheimer (film)"
+    query = "Ukraine"
 
     dfMonthly = pd.read_csv("dataset/out/topviews_merged.csv").set_index("Date").sort_values("Date", ascending=True)
     df = dfMonthly[dfMonthly.Page.isin([query])]
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
     df["Views"].plot(ax=ax, title=query, x="Date", label="Views", legend=True)
-    plt.ylabel("Views in millions")
+    plt.ylabel("Views")
 
     mask = df["Edits"] == "?"
     df[~mask]["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits", legend=True)
