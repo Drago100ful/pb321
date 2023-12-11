@@ -42,7 +42,7 @@ if __name__ == '__main__':
     #
     if editors:
         df["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits", legend=True)
-        plt.ylabel("Count")
+        plt.ylabel("Editors / Edits")
 
     if edits:
         df["Editors"].plot(ax=ax, x="Date", secondary_y=True, label="Editors", legend=True)
