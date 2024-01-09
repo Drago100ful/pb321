@@ -2,6 +2,7 @@ from datetime import datetime
 from glob import glob
 
 import matplotlib.pyplot as plt
+import numpy
 import pandas as pd
 
 
@@ -25,27 +26,45 @@ if __name__ == '__main__':
 
     plt.rcParams[("figure.figsize")] = [10, 5]
 
-    query = "Ukraine"
+    query = ["Vladimir Putin", "Russo-Ukrainian War", "Volodymyr Zelenskyy"]
     log = True
-    editors = True
-    edits = True
+    editors = False
+    edits = False
 
     dfMonthly = pd.read_csv("dataset/out/topviews_merged.csv").set_index("Date").sort_values("Date", ascending=True)
-    df = dfMonthly[dfMonthly.Page.isin([query])]
+
+    dfs = []
+
+    for param in query:
+        dfs.append(dfMonthly[dfMonthly.Page.isin([param])])
+
+    currentDf = dfs[0]
+
+    for df in dfs:
+        if currentDf.iloc[0].name >= df.iloc[0].name:
+            currentDf = df
+
+    for i, row in currentDf.iterrows():
+        for df in dfs:
+            if row.name not in df.index:
+                print(row.name + " missing")
+                df.loc[row.name] = numpy.NaN, numpy.NaN, numpy.NaN, numpy.NaN
+            df.sort_values("Date", ascending=True, inplace=True)
 
     plt.figure()
     fig, ax = plt.subplots()
 
-    df["Views"].plot(ax=ax, title=query, x="Date", label="Views", legend=True)
-    plt.yscale("log") if log else None
-    plt.ylabel("Views")
-    #
-    if editors:
-        df["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits", legend=True)
-        plt.ylabel("Editors / Edits")
+    for i, df in enumerate(dfs):
+        df["Views"].plot(ax=ax, title=query[0], x="Date", label="Views (" + query[i] + ")", legend=True)
+        plt.yscale("log") if log else None
+        plt.ylabel("Views")
 
-    if edits:
-        df["Editors"].plot(ax=ax, x="Date", secondary_y=True, label="Editors", legend=True)
+        if editors:
+            df["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits (" + query[i] + ")", legend=True)
+            plt.ylabel("Editors / Edits")
+
+        if edits:
+            df["Editors"].plot(ax=ax, x="Date", secondary_y=True, label="Editors (" + query[i] + ")", legend=True)
 
     plt.gcf().autofmt_xdate(rotation=45)
     plt.show()
