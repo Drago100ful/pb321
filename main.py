@@ -55,7 +55,7 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
     for i, df in enumerate(dfs):
-        df["Views"].plot(ax=ax, title=query[0], x="Date", label="Views (" + query[i] + ")", legend=True)
+        df["Views"].plot(ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date", label="Views (" + query[i] + ")", legend=True)
         plt.yscale("log") if log else None
         plt.ylabel("Views")
 
