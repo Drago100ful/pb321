@@ -55,12 +55,14 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
     for i, df in enumerate(dfs):
-        df["Views"].plot(ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date", label="Views (" + query[i] + ")", legend=True)
+        df["Views"].plot(ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
+                         label="Views (" + query[i] + ")", legend=True)
         plt.yscale("log") if log else None
         plt.ylabel("Views")
 
         if editors:
-            df["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits (" + query[i] + ")", legend=True)
+            df["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits (" + query[i] + ")",
+                             legend=True)
             plt.ylabel("Editors / Edits")
 
         if edits:
