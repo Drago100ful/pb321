@@ -52,7 +52,9 @@ if __name__ == '__main__':
             df.sort_values("Date", ascending=True, inplace=True)
 
     plt.figure()
+
     fig, ax = plt.subplots()
+    plt.locator_params(axis='x', nbins=24)
 
     for i, df in enumerate(dfs):
         df["Views"].plot(ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
