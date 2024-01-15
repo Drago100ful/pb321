@@ -4,6 +4,7 @@ from glob import glob
 import matplotlib.pyplot as plt
 import numpy
 import pandas as pd
+import matplotlib.dates as md
 
 
 def generate_monthly_csv():
@@ -22,6 +23,7 @@ def generate_monthly_csv():
 
 
 if __name__ == '__main__':
+
     # generate_monthly_csv()
 
     plt.rcParams[("figure.figsize")] = [10, 5]
@@ -31,7 +33,7 @@ if __name__ == '__main__':
     editors = False
     edits = False
 
-    dfMonthly = pd.read_csv("dataset/out/topviews_merged.csv").set_index("Date").sort_values("Date", ascending=True)
+    dfMonthly = pd.read_csv("dataset/out/topviews_merged.csv", parse_dates=["Date"]).set_index("Date").sort_values("Date", ascending=True)
 
     dfs = []
 
@@ -47,14 +49,16 @@ if __name__ == '__main__':
     for i, row in currentDf.iterrows():
         for df in dfs:
             if row.name not in df.index:
-                print(row.name + " missing")
                 df.loc[row.name] = numpy.NaN, numpy.NaN, numpy.NaN, numpy.NaN
             df.sort_values("Date", ascending=True, inplace=True)
 
     plt.figure()
 
     fig, ax = plt.subplots()
-    plt.locator_params(axis='x', nbins=24)
+
+    ax.xaxis.set_major_locator(md.MonthLocator(interval=2))
+    ax.xaxis.set_minor_locator(md.MonthLocator(interval=1))
+    ax.xaxis.set_major_formatter(md.DateFormatter("%b %y"))
 
     for i, df in enumerate(dfs):
         df["Views"].plot(ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
@@ -70,5 +74,6 @@ if __name__ == '__main__':
         if edits:
             df["Editors"].plot(ax=ax, x="Date", secondary_y=True, label="Editors (" + query[i] + ")", legend=True)
 
-    plt.gcf().autofmt_xdate(rotation=45)
+    fig.autofmt_xdate(rotation=90)
+
     plt.show()
