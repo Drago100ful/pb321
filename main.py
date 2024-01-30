@@ -27,9 +27,9 @@ if __name__ == '__main__':
 
     plt.rcParams[("figure.figsize")] = [10, 5]
 
-    query = ["Oppenheimer (film)"]
+    query = ["United States"]
     log = True
-    views = True
+    views = False
     editors = True
     edits = True
 
@@ -42,42 +42,43 @@ if __name__ == '__main__':
 
     currentDf = dfs[0]
 
-    for df in dfs:
-        if currentDf.iloc[0].name >= df.iloc[0].name:
-            currentDf = df
-
-    for i, row in currentDf.iterrows():
+    if len(dfs) > 1:
         for df in dfs:
-            if row.name not in df.index:
-                df.loc[row.name] = numpy.NaN, numpy.NaN, numpy.NaN, numpy.NaN
-            df.sort_values("Date", ascending=True, inplace=True)
+            if currentDf.iloc[0].name >= df.iloc[0].name:
+                currentDf = df
+
+        for i, row in currentDf.iterrows():
+            for df in dfs:
+                if row.name not in df.index:
+                    df.loc[row.name] = numpy.NaN, numpy.NaN, numpy.NaN, numpy.NaN
+                df.sort_values("Date", ascending=True, inplace=True)
 
     plt.figure()
 
     fig, ax = plt.subplots()
 
     ax.xaxis.set_major_locator(md.MonthLocator(interval=2))
-    ax.xaxis.set_minor_locator(md.MonthLocator(interval=1))
     ax.xaxis.set_major_formatter(md.DateFormatter("%b %y"))
+    ax.xaxis.set_minor_locator(md.MonthLocator(interval=1))
 
     for i, df in enumerate(dfs):
         if views:
-            df["Views"].plot(ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
+            df["Views"].plot(ax=ax, x_compat=True, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
                              label="Views (" + query[i] + ")", legend=True)
             plt.yscale("log") if log else None
             plt.ylabel("Views")
 
         if edits:
-            df["Edits"].plot(ax=ax, x="Date", title=query[0] if len(dfs) == 1 else ' / '.join(query),
+            df["Edits"].plot(ax=ax, x_compat=True, x="Date", title=query[0] if len(dfs) == 1 else ' / '.join(query),
                                secondary_y=True, label="Edits (" + query[i] + ")", legend=True)
 
         if editors:
-            df["Editors"].plot(x="Date", y="Edits", ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query),
+            df["Editors"].plot(x="Date", x_compat=True, y="Edits", ax=ax,
+                               title=query[0] if len(dfs) == 1 else ' / '.join(query),
                              secondary_y=True, label="Editors (" + query[i] + ")",
                              legend=True)
 
             plt.ylabel("Editors / Edits")
-
     fig.autofmt_xdate(rotation=90)
 
     plt.show()
