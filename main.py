@@ -1,10 +1,10 @@
 from datetime import datetime
 from glob import glob
 
+import matplotlib.dates as md
 import matplotlib.pyplot as plt
 import numpy
 import pandas as pd
-import matplotlib.dates as md
 
 
 def generate_monthly_csv():
@@ -23,15 +23,15 @@ def generate_monthly_csv():
 
 
 if __name__ == '__main__':
-
     # generate_monthly_csv()
 
     plt.rcParams[("figure.figsize")] = [10, 5]
 
-    query = ["Vladimir Putin", "Russo-Ukrainian War", "Volodymyr Zelenskyy"]
+    query = ["Oppenheimer (film)"]
     log = True
-    editors = False
-    edits = False
+    views = True
+    editors = True
+    edits = True
 
     dfMonthly = pd.read_csv("dataset/out/topviews_merged.csv", parse_dates=["Date"]).set_index("Date").sort_values("Date", ascending=True)
 
@@ -61,18 +61,22 @@ if __name__ == '__main__':
     ax.xaxis.set_major_formatter(md.DateFormatter("%b %y"))
 
     for i, df in enumerate(dfs):
-        df["Views"].plot(ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
-                         label="Views (" + query[i] + ")", legend=True)
-        plt.yscale("log") if log else None
-        plt.ylabel("Views")
-
-        if editors:
-            df["Edits"].plot(x="Date", y="Edits", ax=ax, secondary_y=True, label="Edits (" + query[i] + ")",
-                             legend=True)
-            plt.ylabel("Editors / Edits")
+        if views:
+            df["Views"].plot(ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
+                             label="Views (" + query[i] + ")", legend=True)
+            plt.yscale("log") if log else None
+            plt.ylabel("Views")
 
         if edits:
-            df["Editors"].plot(ax=ax, x="Date", secondary_y=True, label="Editors (" + query[i] + ")", legend=True)
+            df["Edits"].plot(ax=ax, x="Date", title=query[0] if len(dfs) == 1 else ' / '.join(query),
+                               secondary_y=True, label="Edits (" + query[i] + ")", legend=True)
+
+        if editors:
+            df["Editors"].plot(x="Date", y="Edits", ax=ax, title=query[0] if len(dfs) == 1 else ' / '.join(query),
+                             secondary_y=True, label="Editors (" + query[i] + ")",
+                             legend=True)
+
+            plt.ylabel("Editors / Edits")
 
     fig.autofmt_xdate(rotation=90)
 
