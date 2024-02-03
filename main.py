@@ -30,25 +30,28 @@ if __name__ == '__main__':
     # Regenerate source dataset, if needed
     # generate_monthly_csv()
 
+    # Scale
+    doubleScale = True
     # Plot size which translates into resolution
-    plt.rcParams[("figure.figsize")] = [15, 7.5]
+    plt.rcParams["figure.figsize"] = [15, 7.5] if doubleScale else [10, 5]
 
     # Add query parameters here. Supports multi-article plots
-    query = ["Vladimir Putin", "Russo-Ukrainian War", "Volodymyr Zelenskyy", "Ukraine"]
+    query = ["Cleopatra"]
 
     # Visualization parameters
     # Log: Plots y-axis logarithmically
     # Views: Plots views
     # Editors: Plots editors
     # Edits: Plots edits
-    log = True
+    logY = True
+    logSecondaryY = True
     views = True
     editors = False
-    edits = False
+    edits = True
     # Adds and plots derivative data
     # Veq: Plots Views / Edits
     # Eed: Plots Edits - Editors
-    veq = False
+    veq = True
     eed = False
 
     # Reads csv and parses dates as datetime
@@ -108,25 +111,28 @@ if __name__ == '__main__':
     # Iterate through all dataframes and plot their data based on previous parameters
     for i, df in enumerate(dfs):
         if views:
-            df["Views"].plot(ax=ax, x_compat=True, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
+            df["Views"].plot(ax=ax, logy=logY, x_compat=True, title=query[0] if len(dfs) == 1 else ' / '.join(query),
+                             x="Date",
                              label="Views (" + query[i] + ")", legend=True)
-            plt.yscale("log") if log else None
-            plt.ylabel("Views")
 
+            plt.ylabel("Views")
         if veq:
-            df["Veq"].plot(ax=ax, x_compat=True, title=query[0] if len(dfs) == 1 else ' / '.join(query), x="Date",
+            df["Veq"].plot(ax=ax, logy=logY, x_compat=True, title=query[0] if len(dfs) == 1 else ' / '.join(query),
+                           x="Date",
                            label="V/E (" + query[i] + ")", legend=True)
 
         if edits:
-            df["Edits"].plot(ax=ax, x_compat=True, x="Date", title=query[0] if len(dfs) == 1 else ' / '.join(query),
+            df["Edits"].plot(ax=ax, logy=logSecondaryY, x_compat=True, x="Date",
+                             title=query[0] if len(dfs) == 1 else ' / '.join(query),
                              secondary_y=True, label="Edits (" + query[i] + ")", legend=True)
 
         if eed:
-            df["Eed"].plot(ax=ax, x_compat=True, x="Date", title=query[0] if len(dfs) == 1 else ' / '.join(query),
+            df["Eed"].plot(ax=ax, logy=logSecondaryY, x_compat=True, x="Date",
+                           title=query[0] if len(dfs) == 1 else ' / '.join(query),
                            secondary_y=True, label="E/E (" + query[i] + ")", legend=True)
 
         if editors:
-            df["Editors"].plot(x="Date", x_compat=True, y="Edits", ax=ax,
+            df["Editors"].plot(x="Date", logy=logSecondaryY, x_compat=True, y="Edits", ax=ax,
                                title=query[0] if len(dfs) == 1 else ' / '.join(query),
                                secondary_y=True, label="Editors (" + query[i] + ")",
                                legend=True)
